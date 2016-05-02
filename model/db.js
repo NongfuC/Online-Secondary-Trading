@@ -8,28 +8,9 @@ var config = {
 };
 
 var pool = mysql.createPool(config);
-
-var db = {};
-db.query = function query(sql, callback){
-	pool.getConnection(function(err, connection){
-		if(err){
-			console.error('db-获取数据库连接异常！');
-			throw err;
-		}
-		connection.query(sql, function(err, rows){
-			if(err){
-				console.error('db-执行语句异常！');
-				throw err;
-			}
-			callback(err, rows);
-			connection.release(function(error) {
-				if(error) {
-						console.error('db-关闭数据库连接异常！');
-						throw error;
-				}
-			});
-		});
-	});
+pool.err = function (err, info) {
+	console.error(info);
+	throw err;
 };
 
-module.exports = db;
+module.exports = pool;

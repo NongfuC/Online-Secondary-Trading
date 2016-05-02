@@ -1,4 +1,9 @@
-.reg{
-  width:50%;
+body{
+  background-color:#e6e6e6;
+}
+.reg,.login{
   margin:20px auto;
+}
+.reg-wp,.login-wp{
+  margin: auto;
 }
