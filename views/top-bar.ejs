@@ -1,0 +1,33 @@
+<div class="navbar navbar-default" role="navigation">
+    <% if (school) { %>
+    <p class="navbar-text">
+      <a class="text-danger" href="/">
+        <span class="glyphicon glyphicon-education"></span><%= school %>
+      </a>
+    </p>
+    <ul class="nav navbar-nav">
+      <li><a href="#">切换学校</a></li>
+    </ul>
+    <% } else { %>
+    <p class="navbar-text"><a href="./login">请登录</a>&nbsp;&nbsp;或&nbsp;&nbsp;<a href="./reg">注册</a></p>
+    <% } %>
+  <ul class="nav navbar-nav navbar-right">
+    <% if (username) {%>
+    <li role="presentation" class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
+      <%= username %>
+      <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <a href="#">个人信息</a>
+          <a href="#">我的发布</a>
+          <a href="#">我的交易</a>
+        </li>
+      </ul>
+    </li>
+    <li class="publish"><a href="/publish">发布物品</a></li>
+    <li><a href="/logout">退出</a></li>
+    <% } %>
+  </ul>
+</div>

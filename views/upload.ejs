@@ -1,0 +1,16 @@
+<% include header %>
+  <ul class="nav nav-tabs">
+    <li role="presentation"><a href="/login">登录</a></li>
+    <li role="presentation"><a href="/reg">免费注册</a></li>
+    <li role="presentation"><a href="/center">个人中心</a></li>
+  </ul>
+  <form class="form-group" action="/upload" enctype="multipart/form-data" method="post">
+    <input class="form-control" type="text" name="title">
+    <br>
+    <input class="form-control" type="file" name="file1" multiple="multiple">
+    <br>
+    <input class="form-control" type="file" name="file2" multiple="multiple">
+    <br>
+    <input class="btn btn-primary" type="submit" value="Upload">
+  </form>
+  <% include footer %>

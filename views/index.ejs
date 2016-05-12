@@ -1,8 +1,38 @@
 <% include header %>
-  <div class="container">
-    <h1><%= title %></h1>
-    <p>Welcome to
-      <%= title %>
-    </p>
+<% include top-bar %>
+<div class="container">
+  <div class="row">
+    <div class="col-md-2">
+      <div class="list-group js-menu">
+        <a href="#" class="list-group-item active">二手电脑</a>
+        <a href="#" class="list-group-item">二手手机</a>
+        <a href="#" class="list-group-item">数码产品</a>
+        <a href="#" class="list-group-item">生活用品</a>
+        <a href="#" class="list-group-item">小家电</a>
+        <a href="#" class="list-group-item">图书/音像</a>
+        <a href="#" class="list-group-item">文体用品</a>
+        <a href="#" class="list-group-item">其他</a>
+      </div>
+    </div>
+    <div class="col-md-10">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <a href="#" class="thumbnail col-md-2">
+                <img src="https://img.alicdn.com/bao/uploaded/i4/TB1nI_KJFXXXXbQXVXXYlge9VXX_120x120.jpg" alt="...">
+          </a>
+          <div class="col-md-8">
+            <p><a href="#">苹果 256G笔记本。有看上的联系我</a></p>
+            <p><span class="price"><b>¥</b><em>800.00</em></span></p>
+            <p>转一台苹果笔记本MacBookAir，用了不到一个月内存不够我用的想转手换个大的有兴趣的联系我只...</p>
+          </div>
+          <div class="col-md-2">
+            <p><span class="glyphicon glyphicon-user"></span>&nbsp;<a href="#">zhangx...</a></p>
+            <p><span class="glyphicon glyphicon-education"></span>&nbsp;上海理工大学</p>
+            <p><span class="glyphicon glyphicon-hand-right"></span>&nbsp;<a href="#">该卖家更多闲置</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 <% include footer %>

@@ -1,9 +1,18 @@
-body{
-  background-color:#e6e6e6;
+body {
+  /*background-color:#f5f5f5;*/
 }
-.reg,.login{
-  margin:20px auto;
+.reg, .login {
+  margin: 20px auto;
 }
-.reg-wp,.login-wp{
+.reg-wp, .login-wp {
   margin: auto;
 }
+.qd-goods, .qd-price {
+  display: none;
+}
+/*.deleteImg {
+  display: none;
+}
+.thumbnail:hover .deleteImg {
+  display: block;
+}*/
