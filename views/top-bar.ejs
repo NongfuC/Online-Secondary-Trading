@@ -9,7 +9,13 @@
       <li><a href="#">切换学校</a></li>
     </ul>
     <% } else { %>
-    <p class="navbar-text"><a href="./login">请登录</a>&nbsp;&nbsp;或&nbsp;&nbsp;<a href="./reg">注册</a></p>
+    <p class="navbar-text">
+      <a href="/"><span class="glyphicon glyphicon-home"></span>首页</a>
+      &nbsp;&nbsp;||&nbsp;&nbsp;
+      <a href="./login">请登录</a>
+      &nbsp;&nbsp;||&nbsp;&nbsp;
+      <a href="./reg">注册</a>
+    </p>
     <% } %>
   <ul class="nav navbar-nav navbar-right">
     <% if (username) {%>

@@ -1,0 +1,65 @@
+<% include header %>
+<% include top-bar %>
+<div class="container">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="panel-heading">
+            <h3><%= goods.gname %></h3>
+          </div>
+          <p class="col-md-6">
+            <img class="img-thumbnail" src="http://pic8.58cdn.com.cn/bidding/big/n_v1bl2lwi4nmb7fnscxzfcq.png">
+          </p>
+          <div class="col-md-6">
+          <% if(goods.ex_price){ %>
+              <h4>
+                <span class="price">
+                  <b>¥&nbsp;</b><em class="text-danger"><%= goods.ex_price %></em>
+                </span>
+              </h4>
+          <% } %>
+          <% if(goods.ex_goods){ %>
+              <h4>
+                <span class="ex_goods">
+                  <b>期望换到:</b><em class="text-danger"><%= goods.ex_goods %></em>
+                </span>
+              </h4>
+          <% } %>
+              <h4>
+                <span class="glyphicon glyphicon-user"></span>
+                &nbsp;
+                <a href="#" class="text-danger"><%= goods.username %></a>
+              </h4>
+              <h4>
+                <span class="glyphicon glyphicon-phone"></span>
+                &nbsp;
+                <span class="text-danger"><%= user.phone %></span>
+              </h4>
+              <h4>
+                <span class="glyphicon glyphicon-envelope"></span>
+                &nbsp;
+                <span class="text-danger"><%= user.email %></span>
+              </h4>
+              <h4><span>QQ</span>&nbsp;<span class="text-danger"><%= user.qq %></span></h4>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="">物品详情</a></li>           
+          </ul>
+          <br>
+          <p><%= goods.description %></p>
+          <% for(var i = 0,len = imgs.length; i < len; i++){ %>
+            <img class="img-thumbnail" src="<%= imgs[i].src %>">
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
+<% include footer %>

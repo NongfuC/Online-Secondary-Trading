@@ -9,38 +9,54 @@ var config  = {
 };
 
 var pool = mysql.createPool(config);
-pool.select = function(sql) {
-  pool.getConnection(function(err, connection) {
-    if(err) throw err + '\n||获取数据库连接异常！';
-    connection.query(sql, function(err, rows) {
-      if (err) {
+var db   = {};
+db.select = function(sql) {
+  var promise = new Promise(function(resolve) {
+    pool.getConnection(function(err, connection) {
+      if(err) getConErr(err);
+      connection.query(sql, function(err, rows) {
+        if (err) {
+          connection.release(function(err) {
+            if (err) closeConErr(err);
+          });
+          queryErr(err, sql);
+        }
         connection.release(function(err) {
-          if (err) throw err + '\n||关闭数据库连接异常！';
+          if (err) closeConErr(err);
         });
-        throw err + '\n||执行' + sql +'查询语句异常！';
-      }
-      connection.release(function(err) {
-        if (err) throw err + '\n||关闭数据库连接异常！';
+        resolve(rows);
       });
-      return rows;
     });
   });
+  return promise;
 };
-pool.insert = function(sql) {
-  pool.getConnection(function(err, connection) {
-    if(err) throw err + '\n||获取数据库连接异常！';
-    connection.query(sql, function(err, result) {
-      if (err) {
+db.insert = function(sql) {
+  var promise = new Promise(function(resolve) {
+    pool.getConnection(function(err, connection) {
+      if(err) getConErr(err);
+      connection.query(sql, function(err, result) {
+        if (err) {
+          connection.release(function(err) {
+            if (err) closeConErr(err);
+          });
+          queryErr(err, sql);
+        }
         connection.release(function(err) {
-          if (err) throw err + '\n||关闭数据库连接异常！';
+          if (err) closeConErr(err);
         });
-        throw err +'\n||执行SQL插入语句异常！';
-      }
-      connection.release(function(err) {
-        if (err) throw err + '\n||关闭数据库连接异常！';
+        resolve(result);
       });
-      return result;
     });
   });
+  return promise;
 };
-module.exports = pool;
+function getConErr(err) {
+  throw err + '\n||获取数据库连接异常！';              
+}
+function closeConErr(err) {
+  throw err + '\n||关闭数据库连接异常！';
+}
+function queryErr(err, sql) {
+  throw err +'\n||执行' + sql +'语句异常！';
+}
+module.exports = db;

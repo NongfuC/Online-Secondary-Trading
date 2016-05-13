@@ -69,6 +69,7 @@ $('.login-btn').click(function() {
       password: password
     }
   , function(data) {
+      console.log(data);
       if (data.trim() === 'success') {
         location.href = '/';
       } else {
@@ -168,6 +169,13 @@ function deleteImg() {
   });
 }
 
+
+/**
+ * 菜单点击
+ */
+var $menu = $('.js-menu a').click(function() {
+  $(this).toggleClass('active').siblings().removeClass('active');
+});
 /**
  * 菜单碰到浏览器顶部悬浮
  */
@@ -177,7 +185,7 @@ function levitation(){
   var levitation = false;
   $(window).scroll(function() {
     if ($(window).scrollTop() > top && levitation === false) {
-      $menu.css({position: 'fixed', top: '10px', width: width = $menu.width()});
+      $menu.css({position: 'fixed', top: '3px', width: width = $menu.width()});
       levitation = true;
     }
     if ($(window).scrollTop() <= top && levitation === true) {

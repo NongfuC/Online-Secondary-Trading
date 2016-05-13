@@ -1,5 +1,5 @@
 var express     = require('express');
-var pool        = require('../model/db');
+var db          = require('../model/db');
 var session     = require('express-session');
 var cookieParse = require('cookie-parser');
 var formidable  = require('formidable');
@@ -26,7 +26,8 @@ router.use(function(req, res, next) {
     || req.path === '/reg'
     || req.path === '/doreg'
     || req.path === '/login'
-    || req.path === '/dologin'){
+    || req.path === '/dologin'
+    || req.path === '/detail'){
     next();
   }else{
     res.redirect('/login');
@@ -35,10 +36,45 @@ router.use(function(req, res, next) {
 
 
 router.get('/', function(req, res, next) {
-  res.render('index', {
-    title   : '首页',
-    username: req.session.username,
-    school  : req.session.school
+  db.select(
+    'select * from (select * from goods where category =\'二手电脑\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
+  + 'select * from (select * from goods where category =\'二手手机\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
+  + 'select * from (select * from goods where category =\'数码产品\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
+  + 'select * from (select * from goods where category =\'生活用品 \') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
+  + 'select * from (select * from goods where category =\'小家电\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
+  + 'select * from (select * from goods where category =\'图书/音像\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
+  + 'select * from (select * from goods where category =\'文体用品\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
+  + 'select * from (select * from goods where category =\'其他\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
+  )
+  .then(function(goods) { 
+    res.render('index', {
+      title   : '首页',
+      username: req.session.username,
+      school  : req.session.school,
+      goods   : goods
+    });
+  });
+});
+router.get('/detail', function(req, res, next) {
+  db.select('select * from goods where G_ID=' +req.query.id)
+  .then(function(goods) { return goods; })
+  .then(function(goods) {
+    db.select('select src from img where G_ID=' +req.query.id)
+    .then(function(imgs) { return {goods: goods[0], imgs: imgs }})
+    .then(function(result) {
+      db.select('select * from user where username=\'' + result.goods.username + '\'')
+      .then(function(user) {
+        console.log(user);
+        res.render('detail', {
+          title   : '物品详情',
+          username: req.session.username,
+          school  : req.session.school,
+          goods   : result.goods,
+          imgs    : result.imgs,
+          user    : user[0]
+        });
+      });
+    });
   });
 });
 router.get('/reg', function(req, res, next) {
@@ -50,55 +86,27 @@ router.post('/doreg', function(req, res, next) {
   var uname     = req.body.uname;
   var password  = req.body.password;
   var school    = req.body.school;
-  pool.getConnection(function(err, connection) {
-    if (err) {
-      console.error(err, '获取数据库连接异常！');
-    }
-    connection.query('select username from user where username =\'' + uname + '\'', function(err, rows) {
-      if (err) {
-        connection.release(function(err) {
-          if (err) {
-            console.error(err, '关闭数据库连接异常！');
-          }
-        });
-        console.err(err, '执行SQL查询语句异常！');
-      }
-      if (rows.length) {
-        connection.release(function(err) {
-          if (err) {
-            console.error(err, '关闭数据库连接异常！');
-          }
-        });
-        res.send('用户名已存在！');
-        console.log(rows[0].username);
-        return;
-      }
-      connection.query(
-        'insert into user ('
-        + 'username,'
-        + 'password,'
-        + 'school'
-        + ') values ('
-        + '\'' + uname     + '\','
-        + '\'' + password  + '\','
-        + '\'' + school    + '\')'
-        , function(err, result) {
-        if (err) {
-          connection.release(function(err) {
-            if (err) {
-              console.error(err, '关闭数据库连接异常！');
-            }
-          });
-          console.error(err, '执行SQL插入语句异常！');
-        }
-        connection.release(function(err) {
-          console.error(err, '关闭数据库连接异常！');
-        });
+  db.select('select username from user where username =\'' + uname + '\'')
+  .then(function(result) {
+    if(result.length){
+      res.send('用户名已存在！');
+    }else{
+      var sql
+      = 'insert into user ('
+      + 'username,'
+      + 'password,'
+      + 'school'
+      + ') values ('
+      + '\'' + uname     + '\','
+      + '\'' + password  + '\','
+      + '\'' + school    + '\')';
+      db.insert(sql)
+      .then(function(result) {
         req.session.username  = uname;
         req.session.school    = school;
         res.send('success');
       });
-    });
+    }
   });
 });
 router.get('/login', function(req, res, next) {
@@ -109,36 +117,20 @@ router.get('/login', function(req, res, next) {
 router.post('/dologin', function(req, res, next) {
   var uname     = req.body.uname;
   var password  = req.body.password;
-  pool.getConnection(function(err, connection) {
-    if (err) throw err + '||获取数据库连接异常！';
-    connection.query(
-      'select username,password,school from user where username = \'' + uname + '\'', function(err, result) {
-      if (err) {
-        connection.release(function(err) {
-          if (err) throw err + '||关闭数据库连接异常！';
-        });
-        throw err + '||执行SQL查询语句异常！';
-      }
-      if (!result.length) {
-        connection.release(function(err) {
-          if (err) throw err + '||关闭数据库连接异常！';
-        });
+  db.select('select username,password,school from user where username = \'' + uname + '\'')
+  .then(
+    function(rows) {
+      if(!rows.length){
         res.send('用户名不存在！');
-      } else {
-        connection.release(function(err) {
-          if (err) throw err + '||关闭数据库连接异常！';
-        });
-        if (result[0].password !== password) {
-          res.send('密码错误！');
-          return;
-        } else {
-          req.session.username  = uname;
-          req.session.school    = result[0].school;
-          res.send('success');
-        }
+      }else if(rows[0].password === password){
+        req.session.username  = uname;
+        req.session.school    = rows[0].school;
+        res.send('success');
+      }else{
+        res.send('密码错误！');
       }
-    });
-  });
+    }
+  );
 });
 router.get('/logout',function(req, res, next) {
    req.session.destroy();
@@ -161,47 +153,35 @@ router.post('/upload', function(req, res, next) {
   var ex_goods    = body.ex_goods || '';
   var ex_price    = body.ex_price || 0;
   var description = body.description;
-  res.send('asdasdasdasdasdad');
-  pool.getConnection(function(err, connection) {
-    if (err) throw err + '|| 获取数据库连接异常！';
-    var sql 
-    = 'insert into goods('
-    + 'gname,'
-    + 'school,'
-    + 'category,'
-    + 'way,'
-    + 'ex_goods,'
-    + 'ex_price,'
-    + 'description,'
-    + 'username'
-    + ')values('
-    + '\'' + gname        + '\','
-    + '\'' + school       + '\','
-    + '\'' + category     + '\','
-    + '\'' + way          + '\','
-    + '\'' + ex_goods     + '\','
-           + ex_price     + ','
-    + '\'' + description  + '\','
-    + '\'' + username     + '\''
-    + ')';
-    connection.query(sql, function(err, result) {
-      if (err) {
-        connection.release(function(err) {
-          if (err) throw err + '|| 关闭数据库连接异常！';
-        });
-        throw err + '|| 执行SQL插入语句异常！';
-      }
-      var imgs = req.session.imgs;
-      sql = '';
-      for(var i = 0, len = imgs.length; i < len; i++) {
-        sql += 'insert into img(src, G_ID) values(' + '\'' + imgs[i] + '\',' + result.insertId + ');';
-      }
-      connection.query(sql, function(err, result) {
-        if (err) throw err + '|| 执行SQL插入语句异常！';
-      });
-      connection.release(function(err) {
-        if (err) throw err + '|| 关闭数据库连接异常！';
-      });
+  var sql         = 'insert into goods('
+                  + 'gname,'
+                  + 'school,'
+                  + 'category,'
+                  + 'way,'
+                  + 'ex_goods,'
+                  + 'ex_price,'
+                  + 'description,'
+                  + 'username'
+                  + ')values('
+                  + '\'' + gname        + '\','
+                  + '\'' + school       + '\','
+                  + '\'' + category     + '\','
+                  + '\'' + way          + '\','
+                  + '\'' + ex_goods     + '\','
+                         + ex_price     + ','
+                  + '\'' + description  + '\','
+                  + '\'' + username     + '\''
+                  + ')';
+  db.insert(sql)
+  .then(function(result) {
+    sql = '';
+    var imgs = req.session.imgs;
+    while(imgs.length){
+      sql += 'insert into img(src, G_ID) values(' + '\'' + imgs.shift() + '\',' + result.insertId + ');';
+    }
+    console.log(req.session.imgs);
+    db.insert(sql).then(function(result) {
+      res.redirect('/');
     });
   });
 });
@@ -242,13 +222,12 @@ router.post('/uploadImg', function(req, res, next) {
     var suffix    = file.type.match(/\/(\w+)$/)[1];
     var tempName  = file.path;
     var tarName   = uploadDir + Date.now() + Math.round(Math.random() * 10000) + '.' + suffix;
-    fs.rename(tempName, tarName);
-    if(!req.session.imgs){
-      req.session.imgs = [];
-    }
-    req.session.imgs.push(tarName);
-    res.send({
-      imgUrl: tarName
+    fs.rename(tempName, tarName, function(){
+      if(!req.session.imgs){
+        req.session.imgs = [];
+      }
+      req.session.imgs.push(tarName);
+      res.send({imgUrl: tarName});
     });
   });
 });

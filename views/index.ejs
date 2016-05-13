@@ -4,34 +4,58 @@
   <div class="row">
     <div class="col-md-2">
       <div class="list-group js-menu">
-        <a href="#" class="list-group-item active">二手电脑</a>
-        <a href="#" class="list-group-item">二手手机</a>
-        <a href="#" class="list-group-item">数码产品</a>
-        <a href="#" class="list-group-item">生活用品</a>
-        <a href="#" class="list-group-item">小家电</a>
-        <a href="#" class="list-group-item">图书/音像</a>
-        <a href="#" class="list-group-item">文体用品</a>
-        <a href="#" class="list-group-item">其他</a>
+        <a href="#二手电脑" class="list-group-item active">二手电脑</a>
+        <a href="#二手手机" class="list-group-item">二手手机</a>
+        <a href="#数码产品" class="list-group-item">数码产品</a>
+        <a href="#生活用品" class="list-group-item">生活用品</a>
+        <a href="#小家电" class="list-group-item">小家电</a>
+        <a href="#图书/音像" class="list-group-item">图书/音像</a>
+        <a href="#文体用品" class="list-group-item">文体用品</a>
+        <a href="#其他" class="list-group-item">其他</a>
       </div>
     </div>
     <div class="col-md-10">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <a href="#" class="thumbnail col-md-2">
-                <img src="https://img.alicdn.com/bao/uploaded/i4/TB1nI_KJFXXXXbQXVXXYlge9VXX_120x120.jpg" alt="...">
-          </a>
-          <div class="col-md-8">
-            <p><a href="#">苹果 256G笔记本。有看上的联系我</a></p>
-            <p><span class="price"><b>¥</b><em>800.00</em></span></p>
-            <p>转一台苹果笔记本MacBookAir，用了不到一个月内存不够我用的想转手换个大的有兴趣的联系我只...</p>
+      <% var category = ['二手电脑', '二手手机', '数码产品', '生活用品', '小家电', '图书/音像', '文体用品', '其他']; %>
+      <% for(var i = 0, len1 = goods.length; i < len1; i++){ %>
+        <p style="font-size:30px"><a id=<%= category[i] %>><span class="label label-primary"><%= category[i] %></span></a></p>
+        <% if(goods[i].length) {
+          for(var j = 0,len2 = goods[i].length,gname = ''; j < len2; j++){
+            if(gname !== goods[i][j].gname){
+            %>
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <a href="/detail?id=<%= goods[i][j].G_ID %>" class="thumbnail col-md-2">
+                        <img src=<%= goods[i][j].src %>>
+                  </a>
+                  <div class="col-md-8">
+                    <p><a href="/detail?id=<%= goods[i][j].G_ID %>"><%= goods[i][j].gname %></a></p>
+                    <% if(goods[i][j].ex_price) { %>
+                      <p><span class="price text-primary"><b>¥</b><em class="text-danger"><%= goods[i][j].ex_price %></em></span></p>
+                    <% }%>
+                    <% if(goods[i][j].ex_goods) { %>
+                      <p><span class="ex_goods text-primary"><b>期望换到：</b><em class="text-danger"><%= goods[i][j].ex_goods %></em></span></p>
+                    <% }%>
+                    <p><%= goods[i][j].description %></p>
+                  </div>
+                  <div class="col-md-2">
+                    <p><span class="glyphicon glyphicon-user"></span>&nbsp;<a href="#"><%= goods[i][j].username %></a></p>
+                    <p><span class="glyphicon glyphicon-education"></span>&nbsp;<%= goods[i][j].school %></p>
+                    <p><span class="glyphicon glyphicon-hand-right"></span>&nbsp;<a href="#">该卖家更多闲置</a></p>
+                  </div>
+                </div>
+              </div>
+            <%
+            }
+            gname = goods[i][j].gname;
+          }
+        } else{ %>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              暂无！！！
+            </div>
           </div>
-          <div class="col-md-2">
-            <p><span class="glyphicon glyphicon-user"></span>&nbsp;<a href="#">zhangx...</a></p>
-            <p><span class="glyphicon glyphicon-education"></span>&nbsp;上海理工大学</p>
-            <p><span class="glyphicon glyphicon-hand-right"></span>&nbsp;<a href="#">该卖家更多闲置</a></p>
-          </div>
-        </div>
-      </div>
+        <% } 
+      } %>
     </div>
   </div>
 </div>

@@ -24,7 +24,7 @@ create table goods(
   primary key(G_ID),
   foreign key(username) references user(username)
 );
-
+select a.gname,a.category,a.ex_goods,a.ex_price,a.description,a.username,b.src from goods a inner join img b on a.G_ID = b.G_ID group by a.gname,a.category,a.ex_goods,a.ex_price,a.description,a.username,b.src;
 create table img(
   IMG_ID int not null auto_increment,
   src VARCHAR(200) not null,
