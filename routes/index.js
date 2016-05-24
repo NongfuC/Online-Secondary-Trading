@@ -27,7 +27,8 @@ router.use(function(req, res, next) {
     || req.path === '/doreg'
     || req.path === '/login'
     || req.path === '/dologin'
-    || req.path === '/detail'){
+    || req.path === '/detail'
+    || req.path === '/myCenter'){
     next();
   }else{
     res.redirect('/login');
@@ -37,14 +38,14 @@ router.use(function(req, res, next) {
 
 router.get('/', function(req, res, next) {
   db.select(
-    'select * from (select * from goods where category =\'二手电脑\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
-  + 'select * from (select * from goods where category =\'二手手机\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
-  + 'select * from (select * from goods where category =\'数码产品\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
-  + 'select * from (select * from goods where category =\'生活用品 \') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
-  + 'select * from (select * from goods where category =\'小家电\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
-  + 'select * from (select * from goods where category =\'图书/音像\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
-  + 'select * from (select * from goods where category =\'文体用品\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
-  + 'select * from (select * from goods where category =\'其他\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;'
+   `select * from (select * from goods where category =\'二手电脑\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;
+    select * from (select * from goods where category =\'二手手机\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;
+    select * from (select * from goods where category =\'数码产品\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;
+    select * from (select * from goods where category =\'生活用品 \') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;
+    select * from (select * from goods where category =\'小家电\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;
+    select * from (select * from goods where category =\'图书/音像\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;
+    select * from (select * from goods where category =\'文体用品\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;
+    select * from (select * from goods where category =\'其他\') a inner join img b on a.G_ID = b.G_ID order by a.G_ID desc limit 5;`
   )
   .then(function(goods) { 
     res.render('index', {
@@ -250,4 +251,11 @@ router.post('/delete', function(req, res, next) {
     console.log(img, '删除成功！');
   });
 });
+router.get('/myCenter', function(req, res, bext) {
+  res.render('myCenter', {
+      title   : '个人中心',
+      username: req.session.username,
+      school  : req.session.school,
+  });
+})
 module.exports = router;

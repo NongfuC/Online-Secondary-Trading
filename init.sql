@@ -1,14 +1,21 @@
+create table category{
+  C_ID    int not null,
+  cname   VARCHAR(20) not null,
+  primary key(C_ID)
+};
+
 create table user(
-  username VARCHAR(20) not null,
-  password VARCHAR(20) not null,
-  school VARCHAR(20) not null,
-  name VARCHAR(20) default '',
-  gender VARCHAR(4) default '',
-  age int default 0,
-  phone VARCHAR(11) default '',
-  qq VARCHAR(20) default '',
-  email VARCHAR(20) default '',
-  primary key (username)
+  U_ID      int not null,
+  username  VARCHAR(20) not null,
+  password  VARCHAR(20) not null,
+  school    VARCHAR(20) not null,
+  name      VARCHAR(20) default '',
+  gender    VARCHAR(4) default '',
+  age       int default 0,
+  phone     VARCHAR(11) default '',
+  qq        VARCHAR(20) default '',
+  email     VARCHAR(20) default '',
+  primary   key (U_ID,username)
 );
 
 create table goods(
@@ -21,6 +28,7 @@ create table goods(
   ex_price int default 0,
   description text not null,
   username VARCHAR(20) not null,
+  status VARCHAR(10) not null,
   primary key(G_ID),
   foreign key(username) references user(username)
 );

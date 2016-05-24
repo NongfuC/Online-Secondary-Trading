@@ -8,8 +8,8 @@ var config  = {
   multipleStatements: true
 };
 
-var pool = mysql.createPool(config);
-var db   = {};
+var pool  = mysql.createPool(config);
+var db    = {};
 db.select = function(sql) {
   var promise = new Promise(function(resolve) {
     pool.getConnection(function(err, connection) {
@@ -51,12 +51,12 @@ db.insert = function(sql) {
   return promise;
 };
 function getConErr(err) {
-  throw err + '\n||获取数据库连接异常！';              
+  throw (err + '\n||获取数据库连接异常！');              
 }
 function closeConErr(err) {
-  throw err + '\n||关闭数据库连接异常！';
+  throw (err + '\n||关闭数据库连接异常！');
 }
 function queryErr(err, sql) {
-  throw err +'\n||执行' + sql +'语句异常！';
+  throw (err +'\n||执行' + sql +'语句异常！');
 }
 module.exports = db;

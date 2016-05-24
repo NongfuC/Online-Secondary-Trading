@@ -1,0 +1,46 @@
+<% include header %>
+<% include top-bar %>
+<div class="container">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="reg col-sm-8">
+      <h1>个人信息</h1>
+      <hr>
+      <p class="input-group">
+        <label for="uname">
+          用户名：
+        </label>
+        <input id="uname"  class="form-control uname" type="text" placeholder="用户名" value="123">   
+      </p>
+      <p class="input-group">
+        <label for="name">
+          姓&#x3000;名：
+        </label>
+        <input id="name" class="form-control" type="text"  placeholder="输入你的姓名！" value="fasfas">
+      </p>
+      <p class="input-group">
+        <label for="gender">
+          性&#x3000;别：
+        </label>
+        &#x3000;
+        <input type="radio" name="way" value="女">
+        <label>&#x3000;女</label>
+        &#x3000;
+        <input type="radio" name="way" value="男">
+        <label>&#x3000;男</label>
+      </p>
+      <p class="input-group">
+        <label class="input-group-addon" for="qr_password">
+          <span class="glyphicon glyphicon-flag"></span>
+        </label>
+        <input id="school" name="school" class="form-control" type="text" placeholder="请填写完整的大学名称">
+      </p>
+      <p class="input-group">
+        <button class="btn btn-lg btn-success reg-btn" type="button">保存</button>
+      </p>
+    </div>
+    <div class="col-md-2"></div>
+
+  </div>
+</div>
+<% include footer %>
